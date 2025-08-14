@@ -1,0 +1,35 @@
+package tests;
+
+import org.openqa.selenium.By;
+import org.testng.Assert;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Parameters;
+import org.testng.annotations.Test;
+import pages.HomePagePF;
+
+public class bookingSearch extends BaseTest{
+    @BeforeMethod
+    @Parameters({"browser"})
+    public void setup(String browser) throws Exception {
+        init(browser);
+    }
+
+
+    @AfterMethod
+    @Parameters({"quit"})
+    public void tearDown(String quit){
+        if(quit.equalsIgnoreCase("YES")){
+            quit();
+        }
+    }
+
+    @Test
+    @Parameters({"env"})
+    public void searchPlace(String env) throws Exception {
+        openApp(env);
+        HomePagePF homePagePF = new HomePagePF(driver);
+        homePagePF.searchPlace("Kopaonik", "2025-09-01", "2025-09-05");
+        Assert.assertEquals(driver.findElement(By.cssSelector("[aria-label='Search results updated. Kopaonik: 718 properties found. Sorted by: Our top picks.']")).getText(), "Kopaonik: 718 properties found");
+    }
+}

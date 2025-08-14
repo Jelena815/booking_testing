@@ -7,11 +7,81 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import tests.BaseTest;
 
 import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class BasePage {
 
     WebDriver driver;
+    final int maxRetries = 3;
+
+    public BasePage(WebDriver driver){
+        this.driver = driver;
+        PageFactory.initElements(driver,this);
+    }
+
+    @FindBy(css = ".Header_logo'")
+    WebElement homeButton;
+
+    public void goToHomePage(){
+
+        homeButton.click();
+    }
+
+    WebDriverWait webDriverWait;
+
+    public void click(WebElement element){
+        webDriverWait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        webDriverWait.until(ExpectedConditions.visibilityOf(element));
+        webDriverWait.until(ExpectedConditions.elementToBeClickable(element));
+
+        Actions actions = new Actions(driver);
+        actions.moveToElement(element)
+                .build()
+                .perform();
+
+        element.click();
+    }
+
+    BaseTest baseTest = new BaseTest();
+
+    public void click(WebElement element, String log) throws Exception {
+//        - Eksplicitno cekanje  - dinamicki ceka da se odredjeni element ucita odredjeni br sekundi
+        webDriverWait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        webDriverWait.until(ExpectedConditions.visibilityOf(element)); // nadji element
+        webDriverWait.until(ExpectedConditions.elementToBeClickable(element)); // cekaj da moze da se klikne i da bude vidljiv
+
+        int retryCount = 0;
+        while (retryCount<maxRetries){
+//            - Pomeranje kursora
+            try {
+                Actions actions = new Actions(driver);
+                actions.moveToElement(element) //pomeri se do el
+                        .build()    //spisak akcija
+                        .perform(); //izvrsi
+
+                element.click(); //klikni na el
+                System.out.println("Clicked: "+log);
+                break;
+            } catch (Exception e) {
+                retryCount++; //ako retryCount nije jednak max, vraca na pocetak
+                System.out.println("Retry: "+retryCount+ " to click on the "+log);
+                if (retryCount == maxRetries){ //kad je jednak max
+                    baseTest.reportScreenshot(getCurrentDateTime() + "failedClick", "Faild to click");//stavi kad je napravljeno
+                    throw new Exception(getCurrentDateTime()+ "Failed to click element: "+log);
+                }
+            }
+        }
+    }
+
+
+    public String getCurrentDateTime(){
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyy HH:mm:ss");
+        LocalDateTime now = LocalDateTime.now();
+        return dtf.format(now);
+    }
 
 }
