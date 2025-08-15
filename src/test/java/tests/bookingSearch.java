@@ -6,7 +6,9 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
+import pages.BasePage;
 import pages.HomePagePF;
+import java.io.IOException;
 
 public class bookingSearch extends BaseTest{
     @BeforeMethod
@@ -18,8 +20,9 @@ public class bookingSearch extends BaseTest{
 
     @AfterMethod
     @Parameters({"quit"})
-    public void tearDown(String quit){
-        if(quit.equalsIgnoreCase("YES")){
+    public void tearDown(String quit) throws IOException {
+        if(quit.equalsIgnoreCase("YES")) {
+            reportScreenshot("successClick","Successful to click");
             quit();
         }
     }

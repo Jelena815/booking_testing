@@ -43,6 +43,7 @@ public class BaseTest {
         }
     }
 
+
     //        hvata screenshot i snima
     public void takeScreenshot(String fileName) throws IOException {
         File file = ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
@@ -61,5 +62,6 @@ public class BaseTest {
             e.getMessage();
         }
     }
+
 
 }

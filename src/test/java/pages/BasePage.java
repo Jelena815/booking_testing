@@ -46,10 +46,9 @@ public class BasePage {
         element.click();
     }
 
-    BaseTest baseTest = new BaseTest();
 
+    BaseTest baseTest = new BaseTest();
     public void click(WebElement element, String log) throws Exception {
-//        - Eksplicitno cekanje  - dinamicki ceka da se odredjeni element ucita odredjeni br sekundi
         webDriverWait = new WebDriverWait(driver, Duration.ofSeconds(10));
         webDriverWait.until(ExpectedConditions.visibilityOf(element)); // nadji element
         webDriverWait.until(ExpectedConditions.elementToBeClickable(element)); // cekaj da moze da se klikne i da bude vidljiv
@@ -63,14 +62,15 @@ public class BasePage {
                         .build()    //spisak akcija
                         .perform(); //izvrsi
 
-                element.click(); //klikni na el
+                element.click();
                 System.out.println("Clicked: "+log);
+
                 break;
             } catch (Exception e) {
                 retryCount++; //ako retryCount nije jednak max, vraca na pocetak
                 System.out.println("Retry: "+retryCount+ " to click on the "+log);
-                if (retryCount == maxRetries){ //kad je jednak max
-                    baseTest.reportScreenshot(getCurrentDateTime() + "failedClick", "Faild to click");//stavi kad je napravljeno
+                if (retryCount == maxRetries){
+                    baseTest.reportScreenshot(getCurrentDateTime() + "failedClick", "Faild to click");
                     throw new Exception(getCurrentDateTime()+ "Failed to click element: "+log);
                 }
             }

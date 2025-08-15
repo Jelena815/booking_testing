@@ -28,7 +28,7 @@ public class HomePagePF extends BasePage {
     WebElement dateSearch;
 
     @FindBy(css ="[data-testid='occupancy-config']")
-    WebElement numOfPeopleAndRooms;
+    WebElement numOfAdultChildrenRoom;
 
 
     //       - Odabir mesta
@@ -47,6 +47,15 @@ public class HomePagePF extends BasePage {
         click(driver.findElement(By.cssSelector("[data-date=\""+dateOffCheck+"\"]")),"Date off : "+dateOffCheck);
     }
 
+//    public void selectAdultsChildrenRooms(String adult, String children, String room){
+//        click(numOfAdultChildrenRoom);
+//        boolean polje = String.(driver.findElement(By.cssSelector("[class='e484bb5b7a']")));
+//        boolean adultText = String.valueOf(driver.findElement(By.xpath("//label[text()='Adults']")));
+//        boolean childrenText = String.valueOf(driver.findElement(By.xpath("//label[text()='Children']")));
+//        boolean roomText = String.valueOf(driver.findElement(By.xpath("////label[text()='Rooms']")));
+//
+//        if(polje && adultText){}
+//    }
 //    public void selectPeopleAndRooms(String people, String room)throws Exception {
 ////        Thread.sleep(200);
 //        WebDriverWait webDriverWait1 = new WebDriverWait(driver, Duration.ofSeconds(5));  //cekaj da odabere
