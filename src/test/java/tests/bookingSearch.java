@@ -32,7 +32,15 @@ public class bookingSearch extends BaseTest{
     public void searchPlace(String env) throws Exception {
         openApp(env);
         HomePagePF homePagePF = new HomePagePF(driver);
-        homePagePF.searchPlace("Kopaonik", "2025-09-01", "2025-09-05");
-        Assert.assertEquals(driver.findElement(By.cssSelector("[aria-label='Search results updated. Kopaonik: 718 properties found. Sorted by: Our top picks.']")).getText(), "Kopaonik: 718 properties found");
+        homePagePF.searchPlace("Kopaonik", "2025-09-01", "2025-09-05", 2,0,2);
+        Assert.assertEquals(driver.findElement(By.cssSelector("[aria-label='Search results updated. Kopaonik: 728 properties found. Sorted by: Our top picks.']")).getText(), "Kopaonik: 728 properties found");
     }
+
+//    @Test
+//    @Parameters({"env"})
+//    public void verifyMenuItems(String env) throws Exception {
+//        openApp(env);
+//        HomePagePF homePagePF = new HomePagePF(driver);
+//        homePagePF.verifyMenuItems();
+//    }
 }

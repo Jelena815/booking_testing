@@ -22,14 +22,14 @@ public class BasePage {
         this.driver = driver;
         PageFactory.initElements(driver,this);
     }
-
-    @FindBy(css = ".Header_logo'")
-    WebElement homeButton;
-
-    public void goToHomePage(){
-
-        homeButton.click();
-    }
+//
+//    @FindBy(css = ".Header_logo'")
+//    WebElement homeButton;
+//
+//    public void goToHomePage(){
+//
+//        homeButton.click();
+//    }
 
     WebDriverWait webDriverWait;
 
