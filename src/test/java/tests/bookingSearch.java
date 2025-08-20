@@ -1,6 +1,7 @@
 package tests;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -26,7 +27,7 @@ public class bookingSearch extends BaseTest{
             quit();
         }
     }
-
+//
 //    @Test
 //    @Parameters({"env"})
 //    public void searchPlace(String env) throws Exception {
@@ -36,11 +37,30 @@ public class bookingSearch extends BaseTest{
 //        Assert.assertEquals(driver.findElement(By.cssSelector("[aria-label='Search results updated. Kopaonik: 728 properties found. Sorted by: Our top picks.']")).getText(), "Kopaonik: 728 properties found");
 //    }
 
+//    @Test
+//    @Parameters({"env"})
+//    public void verifyNumberOfMenuItems(String env) throws Exception {
+//        openApp(env);
+//        HomePagePF homePagePF = new HomePagePF(driver);
+//        homePagePF.verifyMenuItems();
+//    }
+
+//    @Test
+//    @Parameters({"env"})
+//    public void verifyCarouselButtonForRightAndLeft(String env) throws Exception {
+//        openApp(env);
+//        HomePagePF homePagePF = new HomePagePF(driver);
+//        homePagePF.checkCarouselButton();
+//    }
+
     @Test
     @Parameters({"env"})
-    public void verifyMenuItems(String env) throws Exception {
+    public void verifyColorOfTheText(String env) throws Exception {
         openApp(env);
         HomePagePF homePagePF = new HomePagePF(driver);
-        homePagePF.verifyMenuItems();
+        WebElement getColorOfText = driver.findElement(By.cssSelector(".f546354b44"));
+        homePagePF.verifyColor(getColorOfText);
     }
+
+
 }

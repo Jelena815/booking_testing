@@ -40,6 +40,12 @@ public class HomePagePF extends BasePage {
     @FindBy(css = "[data-qmab-component-id='27']")
     WebElement numOfDisplayItems;
 
+    @FindBy(css = ".f546354b44 ")
+    WebElement colorOfText;
+
+    @FindBy(css = "#bodyconstraint")
+    WebElement body;
+
     @FindBy(css = "[data-testid='header-logo']")
     WebElement homeButton;
 
@@ -110,15 +116,42 @@ public class HomePagePF extends BasePage {
             }
         }
     }
-//
-//    public void checkMenuItemsAreDisplayed() throws InterruptedException {
-//        Thread.sleep(200);
-//
-//        List<WebElement> listMenuElements = driver.findElements(By.cssSelector("[data-qmab-component-id='27']"));
-//        int currentElement = Integer.parseInt(listMenuElements.get(0).findElement(By.cssSelector("li")).getText());
-//        System.out.println(currentElement);
-//
-//    }
+
+    public void checkMenuItemsAreDisplayed() throws InterruptedException {
+        int numberOfMenuItems = 6;
+        Thread.sleep(200);
+        click(numOfDisplayItems);
+
+        List<WebElement> listMenuElements = driver.findElements(By.cssSelector("[data-testid='webcore-carousel']")); //ceo red
+        int numberOfElements = listMenuElements.size();
+        if (numberOfMenuItems == numberOfElements){
+            System.out.println("6 menu items are displayed.");
+        }else {
+            System.out.println("6 menu items not shown.");
+        }
+    }
+
+    public void checkCarouselButton() throws InterruptedException {
+        Thread.sleep(2000);
+        click(numOfDisplayItems.findElement(By.cssSelector("[aria-label='Next']")));
+        click(numOfDisplayItems.findElement(By.cssSelector("[aria-label='Previous']")));
+
+        Thread.sleep(2000);
+    }
+
+    public void checkColorOfTheText(WebElement checkColor) throws InterruptedException {
+        Thread.sleep(2000);
+        WebDriverWait webDriverWait1 = new WebDriverWait(driver, Duration.ofSeconds(5));  //cekaj da odabere
+        webDriverWait1.until(ExpectedConditions.elementToBeClickable(body));
+        click(body);
+        String textOfColor = colorOfText.getCssValue("Check color");
+        String checkColorValue = checkColor.getCssValue("Get color");
+        if (textOfColor.equals(checkColorValue)){
+            System.out.println("Color is black");
+        }else {
+            System.out.println("Color is not black");
+        }
+    }
 
 //            - Slanje upita
     public void clickOnSearchButton(){
@@ -144,8 +177,15 @@ public class HomePagePF extends BasePage {
     }
 
     public void verifyMenuItems() throws InterruptedException {
-//        goToHomePage();
         scrollDown();
-//        checkMenuItemsAreDisplayed();
+        checkMenuItemsAreDisplayed();
+    }
+
+    public void verifyCarouselButton() throws InterruptedException {
+        checkCarouselButton();
+    }
+
+    public void verifyColor(WebElement checkColor) throws InterruptedException {
+        checkColorOfTheText(checkColor);
     }
 }
