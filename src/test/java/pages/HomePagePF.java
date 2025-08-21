@@ -1,9 +1,6 @@
 package pages;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -11,6 +8,7 @@ import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import javax.lang.model.element.Element;
+import java.security.Key;
 import java.sql.Driver;
 import java.time.Duration;
 import java.util.ArrayList;
@@ -48,6 +46,12 @@ public class HomePagePF extends BasePage {
 
     @FindBy(css = "[data-testid='header-logo']")
     WebElement homeButton;
+
+    @FindBy(css = "[data-qmab-component-id='1']")
+    WebElement imagePlace;
+
+    @FindBy(css= ".b7b2eb6274")
+    WebElement leftBodyText;
 
 
 //          - Odabir mesta
@@ -164,8 +168,48 @@ public class HomePagePF extends BasePage {
 //    }
 
     public void scrollDown() throws InterruptedException {
-        Thread.sleep(700);
+        Thread.sleep(500);
         ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", numOfDisplayItems);
+    }
+
+    public void clickImage() throws InterruptedException {
+        Thread.sleep(1500);
+        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", numOfDisplayItems);
+        click(driver.findElement(By.cssSelector("img[src='https://r-xx.bstatic.com/xdata/images/city/170x136/824965.jpg?k=97d2a61bf8cb225e8a6970190ddc0081377c06a23f65d3eb78dc939dd7d26173&o=']")));
+        Thread.sleep(1500);
+    }
+
+    public void setBudget(int minBudget, int maxBudget) throws Exception {
+        Thread.sleep(1500);
+        var slider = leftBodyText.findElements(By.cssSelector(".b23ce1909f"));
+        var left = slider.get(0);
+        var right = slider.get(1);
+
+        var leftStep = Integer.parseInt(left.getAttribute("step"));
+        var leftValue = Integer.parseInt(left.getAttribute("value"));
+        var rightStep = Integer.parseInt(right.getAttribute("step"));
+        var rightValue = Integer.parseInt(right.getAttribute("value"));
+
+        //left slider
+        int cnt = Math.abs(minBudget - leftValue) / leftStep;
+        for(int i = 0; i < cnt; i++){
+            if(leftValue < minBudget){
+                left.sendKeys(Keys.RIGHT);
+            }else{
+                left.sendKeys(Keys.LEFT);
+            }
+        }
+        //right slider
+        cnt = Math.abs(maxBudget - rightValue) / rightStep;
+        for(int i = 0; i < cnt; i++){
+            if(rightValue < maxBudget){
+                right.sendKeys(Keys.RIGHT);
+            }else{
+                right.sendKeys(Keys.LEFT);
+            }
+        }
+
+        Thread.sleep(1500);
     }
 
     public void searchPlace(String place, String dateOn, String dateOff,int targetAdultsValue, int targetChildrenValue, int targetRoomsValue) throws Exception {
@@ -187,5 +231,18 @@ public class HomePagePF extends BasePage {
 
     public void verifyColor(WebElement checkColor) throws InterruptedException {
         checkColorOfTheText(checkColor);
+    }
+
+    public void clickImagePlace() throws InterruptedException {
+        clickImage();
+    }
+
+    public void clickImagePlaceWithAdults(int targetAdultsValue, int targetChildrenValue, int targetRoomsValue, int minBudget, int maxBudget) throws Exception {
+        clickImage();
+        Thread.sleep(500);
+        selectAdultsChildrenRooms(targetAdultsValue,targetChildrenValue,targetRoomsValue);
+        clickOnSearchButton();
+        setBudget(minBudget, maxBudget);
+        Thread.sleep(500);
     }
 }

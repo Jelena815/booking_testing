@@ -53,13 +53,34 @@ public class bookingSearch extends BaseTest{
 //        homePagePF.checkCarouselButton();
 //    }
 
+//    @Test
+//    @Parameters({"env"})
+//    public void verifyColorOfTheText(String env) throws Exception {
+//        openApp(env);
+//        HomePagePF homePagePF = new HomePagePF(driver);
+//        WebElement getColorOfText = driver.findElement(By.cssSelector(".f546354b44"));
+//        homePagePF.verifyColor(getColorOfText);
+//    }
+
+//    @Test
+//    @Parameters({"env"})
+//    public void clickImageCheck(String env) throws Exception {
+//        openApp(env);
+//        HomePagePF homePagePF = new HomePagePF(driver);
+//        homePagePF.clickImagePlace();
+//        Assert.assertEquals(driver.findElement(By.cssSelector("[aria-label='Search results updated. Vrnjačka Banja: 98 properties found. Sorted by: Our top picks.']")).getText(), "Vrnjačka Banja: 98 properties found");
+//    }
+
     @Test
     @Parameters({"env"})
-    public void verifyColorOfTheText(String env) throws Exception {
+    public void selectPriceForPlace(String env) throws Exception {
         openApp(env);
         HomePagePF homePagePF = new HomePagePF(driver);
-        WebElement getColorOfText = driver.findElement(By.cssSelector(".f546354b44"));
-        homePagePF.verifyColor(getColorOfText);
+//        WebElement getImagePlace = driver.findElement(By.cssSelector("[href='https://www.booking.com/searchresults.html?aid=304142&label=gen173nr-10CAEoggI46AdIM1gEaMEBiAEBmAEzuAEXyAEV2AED6AEB-AEBiAIBqAIBuALtu5fFBsACAdICJDVlZjc2NWVkLWEyOWYtNGU4NC1hMTQzLWVlMjZmM2Y5YzMwZtgCAeACAQ&checkin=2025-09-01&checkout=2025-09-05&dest_id=-101185&dest_type=city&group_adults=2&req_adults=2&no_rooms=1&group_children=0&req_children=0']"));
+        homePagePF.clickImagePlaceWithAdults(4,0,2,15000, 20000);
+//        WebElement budget = driver.findElement(By.cssSelector("[aria-valuetext='15000 - 20000']"));
+        Assert.assertEquals(driver.findElement(By.cssSelector("[aria-label='Search results updated. Vrnjačka Banja: 37 properties found. Sorted by: Our top picks.']")).getText(), "Vrnjačka Banja: 37 properties found");
+
     }
 
 
