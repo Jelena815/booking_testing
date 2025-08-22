@@ -1,6 +1,7 @@
 package pages;
 
 import org.openqa.selenium.*;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -14,6 +15,10 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
+
+import static org.testng.AssertJUnit.assertEquals;
+import static org.testng.AssertJUnit.assertNotNull;
 
 
 public class HomePagePF extends BasePage {
@@ -52,6 +57,15 @@ public class HomePagePF extends BasePage {
 
     @FindBy(css= ".b7b2eb6274")
     WebElement leftBodyText;
+
+    @FindBy(css= "[data-testid='sorters-dropdown-trigger']")
+    WebElement sortBy;
+
+    @FindBy(css = ".cca574b93c")
+    WebElement displayedAccommodation;
+
+    @FindBy(css = ".Header_main")
+    WebElement title;
 
 
 //          - Odabir mesta
@@ -172,11 +186,25 @@ public class HomePagePF extends BasePage {
         ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", numOfDisplayItems);
     }
 
+    public void scrollUp() throws InterruptedException {
+        Thread.sleep(3500);
+        var currentHandle = driver.getWindowHandle();
+        Set<String> allHandles = driver.getWindowHandles();
+        for (String handle : allHandles) {
+            if (!handle.equals(currentHandle)) driver.switchTo().window(handle);
+        }
+        //title.sendKeys(Keys.HOME);
+        Actions actions = new Actions(driver);
+        // Simulate pressing the Tab key
+        actions.sendKeys(Keys.HOME).build().perform();
+        //((JavascriptExecutor) driver).executeScript("window.scrollTo(0, -document.body.scrollHeight)");
+    }
+
     public void clickImage() throws InterruptedException {
-        Thread.sleep(1500);
+        Thread.sleep(500);
         ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", numOfDisplayItems);
         click(driver.findElement(By.cssSelector("img[src='https://r-xx.bstatic.com/xdata/images/city/170x136/824965.jpg?k=97d2a61bf8cb225e8a6970190ddc0081377c06a23f65d3eb78dc939dd7d26173&o=']")));
-        Thread.sleep(1500);
+        Thread.sleep(500);
     }
 
     public void setBudget(int minBudget, int maxBudget) throws Exception {
@@ -212,6 +240,21 @@ public class HomePagePF extends BasePage {
         Thread.sleep(1500);
     }
 
+    public void sortByLowPrice() throws InterruptedException {
+        Thread.sleep(1000);
+        click(sortBy);
+        click(driver.findElement(By.cssSelector("[aria-label='Price (lowest first)']")));
+        Thread.sleep(1000);
+    }
+
+    public void clickCheapestProperty() throws InterruptedException {
+        Thread.sleep(500);
+        List<WebElement> listElements = displayedAccommodation.findElements(By.cssSelector("[data-testid='property-card-container']"));
+        click(listElements.get(0));
+
+          Thread.sleep(2500);
+    }
+
     public void searchPlace(String place, String dateOn, String dateOff,int targetAdultsValue, int targetChildrenValue, int targetRoomsValue) throws Exception {
         selectPlaces(place);
         selectDate(dateOn, dateOff);
@@ -244,5 +287,17 @@ public class HomePagePF extends BasePage {
         clickOnSearchButton();
         setBudget(minBudget, maxBudget);
         Thread.sleep(500);
+    }
+
+    public void clickSortByLowPrice() throws InterruptedException {
+        clickImage();
+        Thread.sleep(500);
+//        selectAdultsChildrenRooms(targetAdultsValue,targetChildrenValue,targetRoomsValue);
+//        clickOnSearchButton();
+        sortByLowPrice();
+        Thread.sleep(2000);
+        clickCheapestProperty();
+        scrollUp();
+        Thread.sleep(2500);
     }
 }
