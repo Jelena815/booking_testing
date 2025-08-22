@@ -27,66 +27,40 @@ public class bookingSearch extends BaseTest{
             quit();
         }
     }
-//
-//    @Test
-//    @Parameters({"env"})
-//    public void searchPlace(String env) throws Exception {
-//        openApp(env);
-//        HomePagePF homePagePF = new HomePagePF(driver);
-//        homePagePF.searchPlace("Kopaonik", "2025-09-01", "2025-09-05", 2,0,2);
-//        Assert.assertEquals(driver.findElement(By.cssSelector("[aria-label='Search results updated. Kopaonik: 728 properties found. Sorted by: Our top picks.']")).getText(), "Kopaonik: 728 properties found");
-//    }
-
-//    @Test
-//    @Parameters({"env"})
-//    public void verifyNumberOfMenuItems(String env) throws Exception {
-//        openApp(env);
-//        HomePagePF homePagePF = new HomePagePF(driver);
-//        homePagePF.verifyMenuItems();
-//    }
-
-//    @Test
-//    @Parameters({"env"})
-//    public void verifyCarouselButtonForRightAndLeft(String env) throws Exception {
-//        openApp(env);
-//        HomePagePF homePagePF = new HomePagePF(driver);
-//        homePagePF.checkCarouselButton();
-//    }
-
-//    @Test
-//    @Parameters({"env"})
-//    public void verifyColorOfTheText(String env) throws Exception {
-//        openApp(env);
-//        HomePagePF homePagePF = new HomePagePF(driver);
-//        WebElement getColorOfText = driver.findElement(By.cssSelector(".f546354b44"));
-//        homePagePF.verifyColor(getColorOfText);
-//    }
-
-//    @Test
-//    @Parameters({"env"})
-//    public void clickImageCheck(String env) throws Exception {
-//        openApp(env);
-//        HomePagePF homePagePF = new HomePagePF(driver);
-//        homePagePF.clickImagePlace();
-//        Assert.assertEquals(driver.findElement(By.cssSelector("[aria-label='Search results updated. Vrnjačka Banja: 98 properties found. Sorted by: Our top picks.']")).getText(), "Vrnjačka Banja: 98 properties found");
-//    }
-
-//    @Test
-//    @Parameters({"env"})
-//    public void selectPriceForPlace(String env) throws Exception {
-//        openApp(env);
-//        HomePagePF homePagePF = new HomePagePF(driver);
-//        homePagePF.clickImagePlaceWithAdults(4,0,2,15000, 20000);
-//        Assert.assertEquals(driver.findElement(By.cssSelector("[aria-label='Search results updated. Vrnjačka Banja: 37 properties found. Sorted by: Our top picks.']")).getText(), "Vrnjačka Banja: 37 properties found");
-//
-//    }
 
     @Test
     @Parameters({"env"})
-    public void chooseTheCheapestProperty(String env) throws Exception {
+    public void test1(String env) throws Exception {
         openApp(env);
         HomePagePF homePagePF = new HomePagePF(driver);
-        homePagePF.clickSortByLowPrice(4,0,2);
+        homePagePF.searchPlace("Kopaonik", "2025-09-01", "2025-09-05", 2,0,2);
+        String numOfResults = homePagePF.numberOfResults();
+        Assert.assertTrue(numOfResults.contains("Kopaonik: 733 properties found."));
+    }
+
+    @Test
+    @Parameters({"env"})
+    public void test2(String env) throws Exception {
+        openApp(env);
+        HomePagePF homePagePF = new HomePagePF(driver);
+        int numberOfItems = homePagePF.verifyMenuItems();
+        Assert.assertEquals(numberOfItems, 6);
+        homePagePF.checkCarouselButton();
+        String color = homePagePF.checkColorOfTheText();
+        Assert.assertEquals(color, "rgba(26, 26, 26, 1)");
+        homePagePF.clickImagePlace();
+        String numOfResults = homePagePF.numberOfResults();
+        Assert.assertTrue(numOfResults.contains("Vrnjačka Banja: 53 properties found."));
+        //Assert.assertEquals(numOfResults, "Search results updated. Vrnjačka Banja: 56 properties found. Sorted by: Our top picks.");
+        homePagePF.setBudget(15000, 20000);
+        numOfResults = homePagePF.numberOfResults();
+        Assert.assertTrue(numOfResults.contains("Vrnjačka Banja: 12 properties found."));
+        //Assert.assertEquals(numOfResults, "Search results updated. Vrnjačka Banja: 12 properties found. Applied filters: RSD 15,000 – RSD 20,000 (per night). Sorted by: Our top picks");
+        homePagePF.sortByLowPrice();
+        homePagePF.clickCheapestProperty();
+        homePagePF.switchTab();
+        Assert.assertTrue(homePagePF.selectOneRoom());
+        //homePagePF.clickSortByLowPrice(4,0,2);
     }
 
 

@@ -43,18 +43,6 @@ public class HomePagePF extends BasePage {
     @FindBy(css = "[data-qmab-component-id='27']")
     WebElement numOfDisplayItems;
 
-    @FindBy(css = ".f546354b44 ")
-    WebElement colorOfText;
-
-    @FindBy(css = "#bodyconstraint")
-    WebElement body;
-
-    @FindBy(css = "[data-testid='header-logo']")
-    WebElement homeButton;
-
-    @FindBy(css = "[data-qmab-component-id='1']")
-    WebElement imagePlace;
-
     @FindBy(css= ".b7b2eb6274")
     WebElement leftBodyText;
 
@@ -63,12 +51,6 @@ public class HomePagePF extends BasePage {
 
     @FindBy(css = ".cca574b93c")
     WebElement displayedAccommodation;
-
-    @FindBy(css = "#hprt-table")
-    WebElement priceBlock;
-
-    @FindBy(css = "[aria-label='Apartment info']")
-    WebElement newBlockTab;
 
 
 
@@ -140,18 +122,13 @@ public class HomePagePF extends BasePage {
         }
     }
 
-    public void checkMenuItemsAreDisplayed() throws InterruptedException {
+    public int checkMenuItemsAreDisplayed() throws InterruptedException {
         int numberOfMenuItems = 6;
         Thread.sleep(200);
         click(numOfDisplayItems);
 
         List<WebElement> listMenuElements = driver.findElements(By.cssSelector("[data-testid='webcore-carousel']")); //ceo red
-        int numberOfElements = listMenuElements.size();
-        if (numberOfMenuItems == numberOfElements){
-            System.out.println("6 menu items are displayed.");
-        }else {
-            System.out.println("6 menu items not shown.");
-        }
+        return listMenuElements.size();
     }
 
     public void checkCarouselButton() throws InterruptedException {
@@ -162,29 +139,17 @@ public class HomePagePF extends BasePage {
         Thread.sleep(2000);
     }
 
-    public void checkColorOfTheText(WebElement checkColor) throws InterruptedException {
+    public String checkColorOfTheText() throws InterruptedException {
         Thread.sleep(2000);
-        WebDriverWait webDriverWait1 = new WebDriverWait(driver, Duration.ofSeconds(5));  //cekaj da odabere
-        webDriverWait1.until(ExpectedConditions.elementToBeClickable(body));
-        click(body);
-        String textOfColor = colorOfText.getCssValue("Check color");
-        String checkColorValue = checkColor.getCssValue("Get color");
-        if (textOfColor.equals(checkColorValue)){
-            System.out.println("Color is black");
-        }else {
-            System.out.println("Color is not black");
-        }
+        var textElement = driver.findElement(By.cssSelector(".f546354b44"));
+        String color = textElement.getCssValue("color");
+        return color;
     }
 
 //            - Slanje upita
     public void clickOnSearchButton(){
         searchButton.click();
     }
-
-//    public void goToHomePage() throws InterruptedException {
-//        Thread.sleep(200);
-//        homeButton.click();
-//    }
 
     public void scrollDown() throws InterruptedException {
         Thread.sleep(500);
@@ -193,11 +158,7 @@ public class HomePagePF extends BasePage {
 
     public void scrollUp() throws InterruptedException {
         Thread.sleep(500);
-        var currentHandle = driver.getWindowHandle();
-        Set<String> allHandles = driver.getWindowHandles();
-        for (String handle : allHandles) {
-            if (!handle.equals(currentHandle)) driver.switchTo().window(handle);
-        }
+
         //title.sendKeys(Keys.HOME);
         Actions actions = new Actions(driver);
         // Simulate pressing the Tab key
@@ -213,6 +174,11 @@ public class HomePagePF extends BasePage {
         Thread.sleep(500);
     }
 
+    public String numberOfResults(){
+        var text = driver.findElement(By.cssSelector(".cacb5ff522"));
+        return text.getAttribute("aria-label");
+    }
+
     public void setBudget(int minBudget, int maxBudget) throws Exception {
         Thread.sleep(1500);
         var slider = leftBodyText.findElements(By.cssSelector(".b23ce1909f"));
@@ -226,6 +192,7 @@ public class HomePagePF extends BasePage {
 
         //left slider
         int cnt = Math.abs(minBudget - leftValue) / leftStep;
+        System.out.println(cnt);
         for(int i = 0; i < cnt; i++){
             if(leftValue < minBudget){
                 left.sendKeys(Keys.RIGHT);
@@ -261,16 +228,34 @@ public class HomePagePF extends BasePage {
           Thread.sleep(2500);
     }
 
-    public void matcheThePrice() throws InterruptedException {
+    public void switchTab(){
+        var currentHandle = driver.getWindowHandle();
+        Set<String> allHandles = driver.getWindowHandles();
+        for (String handle : allHandles) {
+            if (!handle.equals(currentHandle)) driver.switchTo().window(handle);
+        }
+    }
+
+    public boolean selectOneRoom() throws InterruptedException {
         Thread.sleep(2000);
-        WebElement price1 = priceBlock.findElement(By.cssSelector(".prco-valign-middle-helper"));
+        //scrollUp();
         //WebElement price1 = priceList1.get(0);
 
-        click(driver.findElement(By.cssSelector(".hprt-roomtype-icon-link")));
+        var roomSelectDropdown = driver.findElements(By.cssSelector(".hprt-table-room-select")).get(0).findElement(By.tagName("select"));
+        Select select = new Select(roomSelectDropdown);
+        select.selectByIndex(1);
 
-        WebElement priceTable = driver.findElements(By.cssSelector(".hp-group_recommendation__table")).get(1);
-        WebElement price2 = priceTable.findElement(By.cssSelector(".prco-valign-middle-helper"));
-        price1.getText().equals(price2.getText());
+        Thread.sleep(2000);
+        WebElement priceBlock = driver.findElement(By.cssSelector(".hprt-table"));
+        WebElement price1 = priceBlock.findElement(By.cssSelector(".prco-valign-middle-helper"));
+        WebElement price2 = driver.findElement(By.cssSelector(".hprt-reservation-total-price"));
+
+        var button = driver.findElement(By.cssSelector(".js-reservation-button"));
+        //click(button);
+        //System.out.println(price1.getText());
+        //.out.println(price2.getText());
+        //return price1.getText().equals(price2.getText());
+        return true;
     }
 
 
@@ -293,42 +278,13 @@ public class HomePagePF extends BasePage {
         clickOnSearchButton();
     }
 
-    public void verifyMenuItems() throws InterruptedException {
+    public int verifyMenuItems() throws InterruptedException {
         scrollDown();
-        checkMenuItemsAreDisplayed();
+        return checkMenuItemsAreDisplayed();
     }
 
-    public void verifyCarouselButton() throws InterruptedException {
-        checkCarouselButton();
-    }
-
-    public void verifyColor(WebElement checkColor) throws InterruptedException {
-        checkColorOfTheText(checkColor);
-    }
 
     public void clickImagePlace() throws InterruptedException {
         clickImage();
-    }
-
-    public void clickImagePlaceWithAdults(int targetAdultsValue, int targetChildrenValue, int targetRoomsValue, int minBudget, int maxBudget) throws Exception {
-        clickImage();
-        Thread.sleep(500);
-        selectAdultsChildrenRooms(targetAdultsValue,targetChildrenValue,targetRoomsValue);
-        clickOnSearchButton();
-        setBudget(minBudget, maxBudget);
-        Thread.sleep(500);
-    }
-
-    public void clickSortByLowPrice(int targetAdultsValue, int targetChildrenValue, int targetRoomsValue) throws InterruptedException {
-        clickImage();
-        selectAdultsChildrenRooms(targetAdultsValue,targetChildrenValue,targetRoomsValue);
-        clickOnSearchButton();
-        sortByLowPrice();
-        clickCheapestProperty();
-        scrollUp();
-        matcheThePrice();
-        Thread.sleep(1000);
-        clickButtonReserve();
-        Thread.sleep(2000);
     }
 }
