@@ -81,14 +81,14 @@ public class bookingSearch extends BaseTest{
 //
 //    }
 
-
     @Test
     @Parameters({"env"})
     public void chooseTheCheapestProperty(String env) throws Exception {
         openApp(env);
         HomePagePF homePagePF = new HomePagePF(driver);
-        homePagePF.clickSortByLowPrice();
+        homePagePF.clickSortByLowPrice(4,0,2);
     }
+
 
 
 }

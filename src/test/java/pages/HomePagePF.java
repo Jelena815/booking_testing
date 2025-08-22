@@ -64,8 +64,13 @@ public class HomePagePF extends BasePage {
     @FindBy(css = ".cca574b93c")
     WebElement displayedAccommodation;
 
-    @FindBy(css = ".Header_main")
-    WebElement title;
+    @FindBy(css = "#hprt-table")
+    WebElement priceBlock;
+
+    @FindBy(css = "[aria-label='Apartment info']")
+    WebElement newBlockTab;
+
+
 
 
 //          - Odabir mesta
@@ -187,7 +192,7 @@ public class HomePagePF extends BasePage {
     }
 
     public void scrollUp() throws InterruptedException {
-        Thread.sleep(3500);
+        Thread.sleep(500);
         var currentHandle = driver.getWindowHandle();
         Set<String> allHandles = driver.getWindowHandles();
         for (String handle : allHandles) {
@@ -201,8 +206,9 @@ public class HomePagePF extends BasePage {
     }
 
     public void clickImage() throws InterruptedException {
-        Thread.sleep(500);
+        Thread.sleep(1000);
         ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", numOfDisplayItems);
+        Thread.sleep(2500);
         click(driver.findElement(By.cssSelector("img[src='https://r-xx.bstatic.com/xdata/images/city/170x136/824965.jpg?k=97d2a61bf8cb225e8a6970190ddc0081377c06a23f65d3eb78dc939dd7d26173&o=']")));
         Thread.sleep(500);
     }
@@ -241,18 +247,42 @@ public class HomePagePF extends BasePage {
     }
 
     public void sortByLowPrice() throws InterruptedException {
-        Thread.sleep(1000);
+        Thread.sleep(500);
         click(sortBy);
         click(driver.findElement(By.cssSelector("[aria-label='Price (lowest first)']")));
-        Thread.sleep(1000);
+        Thread.sleep(500);
     }
 
     public void clickCheapestProperty() throws InterruptedException {
-        Thread.sleep(500);
+        Thread.sleep(2000);
         List<WebElement> listElements = displayedAccommodation.findElements(By.cssSelector("[data-testid='property-card-container']"));
         click(listElements.get(0));
 
           Thread.sleep(2500);
+    }
+
+    public void matcheThePrice() throws InterruptedException {
+        Thread.sleep(2000);
+        WebElement price1 = priceBlock.findElement(By.cssSelector(".prco-valign-middle-helper"));
+        //WebElement price1 = priceList1.get(0);
+
+        click(driver.findElement(By.cssSelector(".hprt-roomtype-icon-link")));
+
+        WebElement priceTable = driver.findElements(By.cssSelector(".hp-group_recommendation__table")).get(1);
+        WebElement price2 = priceTable.findElement(By.cssSelector(".prco-valign-middle-helper"));
+        price1.getText().equals(price2.getText());
+    }
+
+
+    public void clickButtonReserve() throws InterruptedException {
+        Thread.sleep(2000);
+        WebElement priceTable = driver.findElement(By.cssSelector(".js_hp_rt_lightbox_facilities")).findElement(By.cssSelector(".submitButton"));
+        var button = priceTable.findElement(By.tagName("a"));
+        //System.out.println(button.size());
+        //((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", button);
+        click(button);
+
+        click(driver.findElement(By.cssSelector(".hprt-reservation-cta")).findElement(By.tagName("button")));
     }
 
     public void searchPlace(String place, String dateOn, String dateOff,int targetAdultsValue, int targetChildrenValue, int targetRoomsValue) throws Exception {
@@ -289,15 +319,16 @@ public class HomePagePF extends BasePage {
         Thread.sleep(500);
     }
 
-    public void clickSortByLowPrice() throws InterruptedException {
+    public void clickSortByLowPrice(int targetAdultsValue, int targetChildrenValue, int targetRoomsValue) throws InterruptedException {
         clickImage();
-        Thread.sleep(500);
-//        selectAdultsChildrenRooms(targetAdultsValue,targetChildrenValue,targetRoomsValue);
-//        clickOnSearchButton();
+        selectAdultsChildrenRooms(targetAdultsValue,targetChildrenValue,targetRoomsValue);
+        clickOnSearchButton();
         sortByLowPrice();
-        Thread.sleep(2000);
         clickCheapestProperty();
         scrollUp();
-        Thread.sleep(2500);
+        matcheThePrice();
+        Thread.sleep(1000);
+        clickButtonReserve();
+        Thread.sleep(2000);
     }
 }
